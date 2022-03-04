@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>Too Fast FamilyHD</title>
+	</head>
+
+	<body>
+		<h1>Hola</h1>
+
+		<main>
+			<section id="characters">
+				<ul id="characters-list">
+				</ul>
+			</section>
+		</main>
+
+
+<script>
+			
+function WriteCharactersList(data){
+	let text = "";
+	for(let i = 0; i < data.length; i++){
+
+		text += "<li>" + data[i].name +  "</li>";
+
+	}
+	document.getElementById("characters-list").innerHTML = text;
+};
+
+let CharactersInterval = setInterval(function(){
+
+	fetch("/characters")
+		.then( response => response.json())
+		.then( data => WriteCharactersList(data));
+	}, 2000);
+</script>
+
+
+	</body>
+
+</html>
