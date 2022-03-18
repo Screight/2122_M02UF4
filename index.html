@@ -10,54 +10,56 @@
 
 		<main>
 			<section id="characters">
-				<ul id="characters-list">
-				</ul>
+				<h2>Characters</h2>
+					<ul id="characters-list">
+					</ul>
 			</section>
             <section id="items">
-				<ul id="items-list">
-				</ul>
+				<h2>Items</h2>
+					<ul id="items-list">
+					</ul>
 			</section>
 		</main>
 
 
 <script>
 
-fetch("/items").then( response => response.json()).then( data => WriteItemsList(data));
-fetch("/characters").then( response => response.json()).then( data => WriteCharactersList(data));       
+LoadCharactersData();
+LoadItemsData();
 
 function WriteCharactersList(data){
 	let text = "";
 	for(let i = 0; i < data.length; i++){
 
-		text += "<li>" + data[i].name +  "</li>";
+		text += "<li> <a href=\"characters/" + data[i]._id + "\">" + data[i].name + "</a></li>";
 
 	}
 	document.getElementById("characters-list").innerHTML = text;
 };
 
-function WriteItemsList(data){
-	let text = "";
-	for(let i = 0; i < data.length; i++){
-
-		text += "<li>" + data[i].name +  "</li>";
-
-	}
-	document.getElementById("items-list").innerHTML = text;
-};
-
-let CharactersInterval = setInterval(function(){
-
+function LoadCharactersData()
+{	
 	fetch("/characters")
 		.then( response => response.json())
 		.then( data => WriteCharactersList(data));
-	}, 2000);
+}
 
- let ItemsInterval = setInterval(function(){
+function LoadItemsData()
+{	
+	fetch("/items")
+		.then( response => response.json())
+		.then( data => WriteItemsList(data));
+}
 
-    fetch("/items")
-        .then( response => response.json())
-        .then( data => WriteItemsList(data));
-    }, 2000);
+function WriteItemsList(data){
+	let text = "";
+	for(let i = 0; i < data.length; i++){ text += "<li>" + data[i].item +  "</li>"; }
+	document.getElementById("items-list").innerHTML = text;
+};
+
+let CharactersInterval = setInterval(LoadCharactersData("characters"),2000);
+
+let ItemsInterval = setInterval(LoadItemsData(), 2000);
 </script>
 
 	</body>
