@@ -2,6 +2,7 @@
 
 let http = require("http");
 let fs = require("fs");
+const { debug } = require("console");
 
 let mongo_client = require("mongodb").MongoClient;
 let ObjectId = require("mongodb").ObjectID;
@@ -27,9 +28,16 @@ mongo_client.connect(url, function(error, connection){
 });
 
 function SendDataList(database, response, peticion){
-	
-	console.log("trying to access characters");
-	let testing  = database.collection(peticion).find({}, { projection: { name: 1} });
+
+	let testing;
+
+	if(peticion == "characters"){
+		testing  = database.collection(peticion).find({}, { projection: { name: 1} })
+	} 
+	else if(peticion == "items"){
+		testing  = database.collection(peticion).find({}, { projection: { item: 1} })
+	}
+
 	testing.toArray(function(error,data){
 		if(data.length != 0){
 			dataToSend  = JSON.stringify(data);
@@ -40,7 +48,7 @@ function SendDataList(database, response, peticion){
 			response.end("DATA NOT FOUND");
 			return;
 			}
-		})
+	})
 
 }
 
@@ -83,11 +91,25 @@ http.createServer(function(request, response){
 		if(peticion[1] == "characters"){
 			
 			let obj_id = new ObjectId(peticion[2]);
-			let colData = database.collection("characters").find({"_id":obj_id}, {projection:{ name:1 } });
+			let colData = database.collection("characters").find({"_id":obj_id}, {projection:{ "name":1 } });
 			colData.toArray(function(err, data){
 				let string = JSON.stringify(data);
 				response.end(string);
 			});
+		}
+		else if(peticion[1] == "items"){
+			let obj_id = new ObjectId(peticion[2]);
+			let colData = database.collection("items").find({"_id":obj_id}, {projection:{ "item":1 } });
+			colData.toArray(function(err, data){
+				let string = JSON.stringify(data);
+				response.end(string);
+			});
+		}
+		else if(peticion[1] == "remove"){
+			let obj_id = new ObjectId(peticion[2]);
+			collectionName = peticion[3];
+			database.collection(collectionName).deleteOne({"_id":obj_id});
+			response.end("DELETED");
 		}
 	}
 }).listen(1095);

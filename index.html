@@ -31,10 +31,20 @@ function WriteCharactersList(data){
 	let text = "";
 	for(let i = 0; i < data.length; i++){
 
-		text += "<li> <a href=\"characters/" + data[i]._id + "\">" + data[i].name + "</a></li>";
+		text += "<li> <a href=\"characters/" + data[i]._id + "\">" + data[i].name + "</a><a href=\"remove/" + data[i]._id + "/characters"  + "\" >X</a></li>";
 
 	}
 	document.getElementById("characters-list").innerHTML = text;
+};
+
+function WriteItemsList(data){
+	let text = "";
+	for(let i = 0; i < data.length; i++){
+
+		text += "<li> <a href=\"items/" + data[i]._id + "\">" + data[i].item + "</a><a href=\"remove/" + data[i]._id + "/items" + "\" >X</a></li>";
+
+	}
+	document.getElementById("items-list").innerHTML = text;
 };
 
 function LoadCharactersData()
@@ -51,15 +61,9 @@ function LoadItemsData()
 		.then( data => WriteItemsList(data));
 }
 
-function WriteItemsList(data){
-	let text = "";
-	for(let i = 0; i < data.length; i++){ text += "<li>" + data[i].item +  "</li>"; }
-	document.getElementById("items-list").innerHTML = text;
-};
-
 let CharactersInterval = setInterval(LoadCharactersData("characters"),2000);
 
-let ItemsInterval = setInterval(LoadItemsData(), 2000);
+let ItemsInterval = setInterval(LoadItemsData("items"), 2000);
 </script>
 
 	</body>
